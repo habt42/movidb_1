@@ -12,8 +12,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.framgia.habt.moviedb.R;
+import com.framgia.habt.moviedb.util.ApiConst;
 
 public class HomeFragment extends Fragment {
+    private static final String TWO_STRINGS = "%s%s";
     private TabLayout mTabLayout;
     private ViewPager mViewPager;
 
@@ -35,10 +37,10 @@ public class HomeFragment extends Fragment {
         mViewPager = (ViewPager) view.findViewById(R.id.fragment_home_view_pager);
         String[] tabTitles = getActivity().getResources().getStringArray(R.array.home_fragment_pager_title);
         mViewPager.setAdapter(new PagerAdapter(getFragmentManager(), tabTitles));
+        mViewPager.setOffscreenPageLimit(3);
         mTabLayout.setupWithViewPager(mViewPager);
         return view;
     }
-
 
     private static class PagerAdapter extends FragmentPagerAdapter {
         private static final int PAGE_COUNT = 4;
@@ -51,7 +53,24 @@ public class HomeFragment extends Fragment {
 
         @Override
         public Fragment getItem(int position) {
-            return new ListMovieFragment();
+            String type;
+            switch (position) {
+                case 0:
+                    type =  ApiConst.POPULAR_MOVIE_URL;
+                    break;
+                case 1:
+                    type = ApiConst.TOP_RATED_MOVIE_URL;
+                    break;
+                case 2:
+                    type = ApiConst.NOW_PLAYING_MOVIE_URL;
+                    break;
+                case 3:
+                    type = ApiConst.UPCOMING_MOVIE_URL;
+                    break;
+                default:
+                    return null;
+            }
+            return ListMovieFragment.newInstance(type);
         }
 
         @Override
