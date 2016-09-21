@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/fragment_info_background">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/layout_item_margin"
+                android:background="@drawable/fragment_info_item_border"
+                android:orientation="horizontal">
+
+                <com.android.volley.toolbox.NetworkImageView
+                    android:id="@+id/fragment_info_imv_poster"
+                    android:layout_width="@dimen/fragment_info_poster_width"
+                    android:layout_height="@dimen/fragment_info_poster_height"
+                    android:scaleType="fitXY" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/fragment_info_imv_poster"
+                    android:orientation="vertical"
+                    android:paddingLeft="@dimen/list_view_item_padding">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/fragment_info_title"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/fragment_info_tv_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/fragment_info_genres"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/fragment_info_tv_genres"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/fragment_info_status"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/fragment_info_tv_status"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/fragment_info_release_date"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/fragment_info_tv_release_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/layout_item_margin"
+                android:background="@drawable/fragment_info_item_border"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/fragment_info_tagline"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/fragment_info_tv_tagline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/fragment_info_overview"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/fragment_info_tv_overview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/layout_item_margin"
+                android:background="@drawable/fragment_info_item_border"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/fragment_info_production_company"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/fragment_info_tv_companies"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+</FrameLayout>

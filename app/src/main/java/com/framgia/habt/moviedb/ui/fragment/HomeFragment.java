@@ -15,7 +15,6 @@ import com.framgia.habt.moviedb.R;
 import com.framgia.habt.moviedb.util.ApiConst;
 
 public class HomeFragment extends Fragment {
-    private static final String TWO_STRINGS = "%s%s";
     private TabLayout mTabLayout;
     private ViewPager mViewPager;
 

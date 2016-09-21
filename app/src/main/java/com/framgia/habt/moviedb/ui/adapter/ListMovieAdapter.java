@@ -32,6 +32,7 @@ public class ListMovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private int mLastVisibleItem;
     private boolean mIsLoading;
     private LoadMoreListener mLoadMoreListener;
+    private ClickListener mClickListener;
 
     public ListMovieAdapter(Context context, RecyclerView recView, ArrayList<Movie> movies) {
         mContext = context;
@@ -72,7 +73,7 @@ public class ListMovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         if (holder instanceof MovieViewHolder) {
             MovieViewHolder vh = (MovieViewHolder) holder;
             Movie movie = mListMovie.get(position);
@@ -106,15 +107,32 @@ public class ListMovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         mLoadMoreListener = loadMoreListener;
     }
 
+    public void setClickListener(ClickListener listener) {
+        mClickListener = listener;
+    }
+
     public void setLoaded() {
         mIsLoading = false;
+    }
+
+    public interface ClickListener {
+        void onItemClick(int position);
     }
 
     public interface LoadMoreListener {
         void onLoadMore();
     }
 
-    private static class MovieViewHolder extends RecyclerView.ViewHolder {
+    private static class LoadingViewHolder extends RecyclerView.ViewHolder {
+        private ProgressBar mProgressBar;
+
+        public LoadingViewHolder(View itemView) {
+            super(itemView);
+            mProgressBar = (ProgressBar) itemView.findViewById(R.id.item_loading_progress_bar);
+        }
+    }
+
+    private class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private NetworkImageView imvPoster;
         private TextView tvTitle;
         private TextView tvReleaseDate;
@@ -128,15 +146,12 @@ public class ListMovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             tvReleaseDate = (TextView) itemView.findViewById(R.id.item_movie_tv_release_date);
             tvVoteAverage = (TextView) itemView.findViewById(R.id.item_movie_tv_vote_average);
             tvVoteCount = (TextView) itemView.findViewById(R.id.item_movie_tv_vote_count);
+            itemView.setOnClickListener(this);
         }
-    }
 
-    private static class LoadingViewHolder extends RecyclerView.ViewHolder {
-        private ProgressBar mProgressBar;
-
-        public LoadingViewHolder(View itemView) {
-            super(itemView);
-            mProgressBar = (ProgressBar) itemView.findViewById(R.id.item_loading_progress_bar);
+        @Override
+        public void onClick(View view) {
+            mClickListener.onItemClick(getAdapterPosition());
         }
     }
 }
