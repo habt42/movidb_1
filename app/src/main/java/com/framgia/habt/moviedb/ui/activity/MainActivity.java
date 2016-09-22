@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
         mDrawerLayout.addDrawerListener(mDrawerToggle);
         mNavView = (NavigationView) findViewById(R.id.activity_main_nav_view);
         setupDrawerContent(mNavView);
-        initHomeFragment();
+        showHomeFragment();
     }
 
     @Override
@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
         mDrawerLayout.closeDrawers();
     }
 
-    private void initHomeFragment() {
+    private void showHomeFragment() {
         HomeFragment homeFragment = new HomeFragment();
         FragmentManager manager = getSupportFragmentManager();
         manager.beginTransaction().replace(R.id.activity_main_fl_holder, homeFragment).commit();
