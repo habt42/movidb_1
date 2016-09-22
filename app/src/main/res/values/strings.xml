@@ -1,7 +1,5 @@
 <resources>
     <string name="app_name">MovieDB</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
     <string name="home_fragment_title">Home</string>
@@ -14,5 +12,18 @@
         <item>Top rated</item>
         <item>Now playing</item>
         <item>Upcoming</item>
+    </string-array>
+    <string name="action_settings">Settings</string>
+    <string name="fragment_info_title">Title:</string>
+    <string name="fragment_info_status">\nStatus:</string>
+    <string name="fragment_info_release_date">\nRelease date:</string>
+    <string name="fragment_info_tagline">Tagline:</string>
+    <string name="fragment_info_overview">\nOverview:</string>
+    <string name="fragment_info_genres">\nGenres:</string>
+    <string name="fragment_info_production_company">Production Companies:</string>
+    <string-array name="movie_detail_activity_pager_title">
+        <item>Info</item>
+        <item>Casts</item>
+        <item>Similar movies</item>
     </string-array>
 </resources>

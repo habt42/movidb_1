@@ -1,6 +1,8 @@
 package com.framgia.habt.moviedb.ui.fragment;
 
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -18,6 +20,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.framgia.habt.moviedb.AppController;
 import com.framgia.habt.moviedb.R;
 import com.framgia.habt.moviedb.data.model.Movie;
+import com.framgia.habt.moviedb.ui.activity.MovieDetailActivity;
 import com.framgia.habt.moviedb.ui.adapter.ListMovieAdapter;
 import com.framgia.habt.moviedb.util.ApiConst;
 import com.google.gson.Gson;
@@ -27,8 +30,9 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.Locale;
 
-public class ListMovieFragment extends Fragment {
+public class ListMovieFragment extends Fragment implements ListMovieAdapter.ClickListener {
     public static final String ARG_JSON_LINK = "ARG_JSON_LINK";
+    public static final String EXTRA_MOVIE = "EXTRA_MOVIE";
     private static final String URL_FORMAT_WITH_PAGE_PARAMS = "%s%s%d";
     private static final int JSON_FIRST_PAGE = 1;
     private SwipeRefreshLayout mSrl;
@@ -37,6 +41,7 @@ public class ListMovieFragment extends Fragment {
     private int mCurrentPage;
     private ListMovieAdapter mMovieAdapter;
     private ArrayList<Movie> mListMovie;
+    private Activity mActivity;
 
     public ListMovieFragment() {
         // Required empty public constructor
@@ -48,6 +53,7 @@ public class ListMovieFragment extends Fragment {
         mJsonLink = getArguments().getString(ARG_JSON_LINK);
         mListMovie = new ArrayList<>();
         mCurrentPage = JSON_FIRST_PAGE;
+        mActivity = getActivity();
     }
 
     @Override
@@ -63,6 +69,7 @@ public class ListMovieFragment extends Fragment {
                 loadData(++mCurrentPage);
             }
         });
+        mMovieAdapter.setClickListener(this);
         mRvMovies.setAdapter(mMovieAdapter);
         refreshList();
         mSrl = (SwipeRefreshLayout) view.findViewById(R.id.fragment_list_movie_srl);
@@ -73,6 +80,13 @@ public class ListMovieFragment extends Fragment {
             }
         });
         return view;
+    }
+
+    @Override
+    public void onItemClick(int position) {
+        Intent intent = new Intent(mActivity, MovieDetailActivity.class);
+        intent.putExtra(EXTRA_MOVIE, mListMovie.get(position));
+        startActivity(intent);
     }
 
     public static ListMovieFragment newInstance(String jsonLink) {
@@ -110,7 +124,7 @@ public class ListMovieFragment extends Fragment {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getActivity(), R.string.json_load_error, Toast.LENGTH_SHORT).show();
+                Toast.makeText(mActivity, R.string.json_load_error, Toast.LENGTH_SHORT).show();
             }
         });
         AppController.getInstance().addToRequestQueue(stringReq);
