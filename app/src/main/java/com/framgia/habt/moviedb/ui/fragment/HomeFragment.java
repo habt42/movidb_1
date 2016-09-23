@@ -55,7 +55,7 @@ public class HomeFragment extends Fragment {
             String type;
             switch (position) {
                 case 0:
-                    type =  ApiConst.POPULAR_MOVIE_URL;
+                    type = ApiConst.POPULAR_MOVIE_URL;
                     break;
                 case 1:
                     type = ApiConst.TOP_RATED_MOVIE_URL;
@@ -69,7 +69,7 @@ public class HomeFragment extends Fragment {
                 default:
                     return null;
             }
-            return ListMovieFragment.newInstance(type);
+            return RecyclerViewFragment.newInstance(type, RecyclerViewFragment.LIST_MOVIE);
         }
 
         @Override

@@ -6,7 +6,7 @@
     android:padding="@dimen/list_view_item_padding">
 
     <com.android.volley.toolbox.NetworkImageView
-        android:id="@+id/item_movie_imv_poster"
+        android:id="@+id/item_cast_imv_picture"
         android:layout_width="@dimen/list_view_item_image_width"
         android:layout_height="@dimen/list_view_item_image_height"
         android:scaleType="fitXY" />
@@ -19,24 +19,14 @@
         android:paddingTop="@dimen/list_view_item_padding">
 
         <TextView
-            android:id="@+id/item_movie_tv_title"
+            android:id="@+id/item_cast_tv_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/list_view_item_title_text_size"
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/item_movie_tv_release_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:id="@+id/item_movie_tv_vote_average"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:id="@+id/item_movie_tv_vote_count"
+            android:id="@+id/item_cast_tv_character"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>

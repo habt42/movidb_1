@@ -17,9 +17,8 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.framgia.habt.moviedb.AppController;
 import com.framgia.habt.moviedb.R;
 import com.framgia.habt.moviedb.data.model.Movie;
-import com.framgia.habt.moviedb.ui.fragment.ListCastFragment;
-import com.framgia.habt.moviedb.ui.fragment.ListMovieFragment;
 import com.framgia.habt.moviedb.ui.fragment.MovieInfoFragment;
+import com.framgia.habt.moviedb.ui.fragment.RecyclerViewFragment;
 import com.framgia.habt.moviedb.util.ApiConst;
 
 public class MovieDetailActivity extends AppCompatActivity {
@@ -29,7 +28,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_detail);
 
-        Movie movie = getIntent().getParcelableExtra(ListMovieFragment.EXTRA_MOVIE);
+        Movie movie = getIntent().getParcelableExtra(RecyclerViewFragment.EXTRA_MOVIE);
 
         CollapsingToolbarLayout clsToolbar = (CollapsingToolbarLayout) findViewById(R.id.activity_movie_detail_cls_toolbar);
         clsToolbar.setTitle(movie.getTitle());
@@ -74,10 +73,11 @@ public class MovieDetailActivity extends AppCompatActivity {
                 case 0:
                     return MovieInfoFragment.newInstance(mMovie.getId());
                 case 1:
-                    return ListCastFragment.newInstance(mMovie.getId());
+                    return RecyclerViewFragment.newInstance(mMovie.getId(),
+                            RecyclerViewFragment.LIST_CAST);
                 case 2:
                     String url = String.format(ApiConst.SIMILAR_MOVIES_URL, mMovie.getId());
-                    return ListMovieFragment.newInstance(url);
+                    return RecyclerViewFragment.newInstance(url, RecyclerViewFragment.LIST_MOVIE);
                 default:
                     return null;
             }

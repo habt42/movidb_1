@@ -10,6 +10,7 @@ public class ApiConst {
     public static final String API_KEY_PARAMS = "?api_key=" + API_KEY;
     public static final String PAGE_PARAMS = "&page=";
     public static final String SIMILAR_MOVIES_URL = BASE_MOVIE_URL + "%s" + "/similar" + API_KEY_PARAMS;
+    public static final String MOVIE_CREDITS_URL = BASE_MOVIE_URL + "%s" + "/credits" + API_KEY_PARAMS;
     public static final String MOVIE_DETAIL_URL = BASE_MOVIE_URL + "%s" + API_KEY_PARAMS;
     public static final String POSTER_PATH_PREFIX_URL = BASE_IMAGE_URL + "w300_and_h450_bestv2";
     public static final String BACKDROP_PATH_PREFIX_URL = BASE_IMAGE_URL + "w500";
@@ -17,4 +18,5 @@ public class ApiConst {
     public static final String TOP_RATED_MOVIE_URL = BASE_MOVIE_URL + "top_rated" + API_KEY_PARAMS;
     public static final String NOW_PLAYING_MOVIE_URL = BASE_MOVIE_URL + "now_playing" + API_KEY_PARAMS;
     public static final String UPCOMING_MOVIE_URL = BASE_MOVIE_URL + "upcoming" + API_KEY_PARAMS;
+    public static final String MOVIE_LIST_URL_WITH_PAGE_PARAMS = "%s" + PAGE_PARAMS + "%d";
 }
