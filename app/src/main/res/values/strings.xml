@@ -27,4 +27,12 @@
         <item>Similar movies</item>
     </string-array>
     <string name="item_cast_character">As character: </string>
+    <string name="nav_view_home_title">Home</string>
+    <string name="nav_view_my_watchlist_title">My watchlist</string>
+    <string name="nav_view_my_favorite_title">My favorite</string>
+    <string name="nav_view_my_list_title">My list</string>
+    <string name="nav_view_discover_title">Discover</string>
+    <string name="nav_view_companies_title">Companies</string>
+    <string name="nav_header_login">Login</string>
+    <string name="nav_view_logout_title">Log out</string>
 </resources>
