@@ -35,4 +35,8 @@
     <string name="nav_view_companies_title">Companies</string>
     <string name="nav_header_login">Login</string>
     <string name="nav_view_logout_title">Log out</string>
+    <string name="login_failed">Login failed</string>
+    <string name="login_successfully">Login successfully</string>
+    <string name="authenticating_message">Please wait</string>
+    <string name="get_info_failed">Cannot get account\'s info.</string>
 </resources>
