@@ -3,12 +3,15 @@ package com.framgia.habt.moviedb.data.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by habt on 9/23/16.
  */
-public class Account implements Parcelable{
+public class Account implements Parcelable {
+    public static final String GRAVATAR = "gravatar";
+    public static final String HASH = "hash";
     @SerializedName("id")
     private String mId;
     @SerializedName("hash")
@@ -17,6 +20,16 @@ public class Account implements Parcelable{
     private String mName;
     @SerializedName("username")
     private String mUsername;
+    @SerializedName("avatar")
+    private JsonObject mAvatar;
+
+    public JsonObject getAvatar() {
+        return mAvatar;
+    }
+
+    public void setAvatar(JsonObject avatar) {
+        mAvatar = avatar;
+    }
 
     public String getId() {
         return mId;
