@@ -13,4 +13,7 @@
     <dimen name="fragment_info_poster_width">120dp</dimen>
     <dimen name="fragment_info_poster_height">180dp</dimen>
     <dimen name="layout_item_padding">5dp</dimen>
+    <dimen name="nav_header_height">150dp</dimen>
+    <dimen name="nav_header_profile_pic_width">60dp</dimen>
+    <dimen name="nav_header_profile_pic_height">60dp</dimen>
 </resources>
