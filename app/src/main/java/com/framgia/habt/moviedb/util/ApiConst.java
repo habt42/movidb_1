@@ -27,4 +27,6 @@ public class ApiConst {
     public static final String REQUEST_SESSION_ID = BASE_URL + "authentication/session/new" + API_KEY_PARAMS + "&request_token=" + "%s";
     public static final String GET_ACCOUNT_INFO_URL = BASE_URL + "account" + API_KEY_PARAMS + "&session_id=" + "%s";
     public static final String GRAVATAR_URL = "https://www.gravatar.com/avatar/" + "%s";
+    public static final String FAVORITE_LIST_URL = BASE_URL + "account/" + "%s" + "/favorite/movies" + API_KEY_PARAMS + "&session_id=" + "%s";
+    public static final String WATCHLIST_URL = BASE_URL + "account/" + "%s" + "/watchlist/movies" + API_KEY_PARAMS + "&session_id=" + "%s";
 }

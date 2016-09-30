@@ -2,12 +2,16 @@ package com.framgia.habt.moviedb.ui.activity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.customtabs.CustomTabsIntent;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.FragmentManager;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -18,6 +22,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.android.volley.toolbox.ImageLoader;
@@ -26,55 +31,33 @@ import com.framgia.habt.moviedb.AppController;
 import com.framgia.habt.moviedb.R;
 import com.framgia.habt.moviedb.data.model.Account;
 import com.framgia.habt.moviedb.ui.fragment.HomeFragment;
+import com.framgia.habt.moviedb.ui.fragment.RecyclerViewFragment;
 import com.framgia.habt.moviedb.util.ApiConst;
+import com.framgia.habt.moviedb.util.AuthenticationInfo;
 import com.framgia.habt.moviedb.util.AuthenticationTask;
 
-public class MainActivity extends AppCompatActivity implements AuthenticationTask.GetSessionIdListener {
-    private Toolbar mToolbar;
+public class MainActivity extends AppCompatActivity
+        implements AuthenticationTask.GetSessionIdListener, View.OnClickListener {
     private EditText mEdtSearch;
     private ImageButton mImbSearch;
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavView;
     private ActionBarDrawerToggle mDrawerToggle;
+    private LinearLayout mLayoutSearch;
 
     private View mNavHeader;
     private NetworkImageView mImvProfilePic;
     private Button mBtnAccount;
 
-    private MainActivity mActivity;
     private ProgressDialog mProgressDialog;
-
-    private View.OnClickListener onClickLogin = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            new AuthenticationTask(mActivity, MainActivity.this).getRequestToken();
-            showProgressDialog();
-        }
-    };
-
-    private View.OnClickListener onClickProfile = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-
-        }
-    };
+    private AuthenticationTask mAuthenTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mActivity = this;
-        mToolbar = (Toolbar) findViewById(R.id.activity_main_toolbar);
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.activity_main_drawer_layout);
-        mDrawerToggle = new ActionBarDrawerToggle(this,
-                mDrawerLayout, mToolbar, R.string.drawer_open, R.string.drawer_close);
-        mDrawerLayout.addDrawerListener(mDrawerToggle);
-        mNavView = (NavigationView) findViewById(R.id.activity_main_nav_view);
-        mNavHeader = mNavView.inflateHeaderView(R.layout.nav_header);
-        mImvProfilePic = (NetworkImageView) mNavHeader.findViewById(R.id.nav_header_imv_profile_pic);
-        mBtnAccount = (Button) mNavHeader.findViewById(R.id.nav_header_btn_account);
+        mAuthenTask = new AuthenticationTask(this);
+        setupViews();
         setupNavView(checkLoggedIn(), null);
         setupDrawerContent(mNavView);
         showHomeFragment();
@@ -104,10 +87,11 @@ public class MainActivity extends AppCompatActivity implements AuthenticationTas
             if (uri.getQueryParameter("action").equalsIgnoreCase(ApiConst.AUTHENTICATION_ACTION)) {
                 if (uri.getQueryParameter(AuthenticationTask.APPROVED_RETURN) != null) {
                     showProgressDialog();
-                    AuthenticationTask task = new AuthenticationTask(mActivity, MainActivity.this);
-                    task.getSessionId(uri.getQueryParameter(AuthenticationTask.REQUEST_TOKEN));
+                    mAuthenTask.getSessionId(uri.getQueryParameter(AuthenticationTask.REQUEST_TOKEN));
+                    intent.setData(null);
+                    setIntent(intent);
                 } else {
-                    Toast.makeText(mActivity, getResources().getString(R.string.login_failed), Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, getResources().getString(R.string.login_failed), Toast.LENGTH_LONG).show();
                 }
             }
         }
@@ -120,19 +104,108 @@ public class MainActivity extends AppCompatActivity implements AuthenticationTas
 
     @Override
     public void onLoginSuccess(Account account) {
+        AuthenticationInfo.saveAccountId(this, account.getId());
         setupNavView(true, account);
     }
 
+    @Override
+    public void onGetRequestTokenResponse(String url) {
+        CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+        CustomTabsIntent intent = builder.build();
+        intent.launchUrl(this, Uri.parse(url));
+    }
+
+    @Override
+    public void onGetSessionIdResponse(String sessionId) {
+        AuthenticationInfo.saveSessionId(this, sessionId);
+        mAuthenTask.getAccountInfo(sessionId);
+    }
+
+    @Override
+    public void showLoginFailed() {
+        Toast.makeText(this, getResources().getString(R.string.login_failed), Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void showLoadingFailed() {
+        Toast.makeText(this, getResources().getString(R.string.json_load_error), Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void showGetInfoFailed() {
+        Toast.makeText(this, getResources().getString(R.string.get_info_failed), Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onClick(View view) {
+        if (checkLoggedIn()) {
+            //more work here
+        } else {
+            mAuthenTask.getRequestToken();
+            showProgressDialog();
+        }
+    }
+
     private void selectDrawerItem(MenuItem item) {
+        Fragment fragment;
+        switch (item.getItemId()) {
+            case R.id.nav_view_home_item:
+                showHomeFragment();
+                return;
+            case R.id.nav_view_my_watchlist_item:
+                fragment = getWatchlistFragment();
+                break;
+            case R.id.nav_view_my_favorite_item:
+                fragment = getFavoriteFragment();
+                break;
+            case R.id.nav_view_logout_item:
+                logout();
+                return;
+            default:
+                fragment = new HomeFragment();
+        }
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.activity_main_fl_holder, fragment);
+        ft.addToBackStack(null);
+        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        ft.commit();
         item.setChecked(true);
         mDrawerLayout.closeDrawers();
     }
 
+    private Fragment getFavoriteFragment() {
+        mLayoutSearch.setVisibility(View.GONE);
+        setTitle(getResources().getString(R.string.my_favorite_tb_title));
+        String url = String.format(ApiConst.FAVORITE_LIST_URL, AuthenticationInfo.getAccountId(this),
+                AuthenticationInfo.getSessionId(this));
+        return RecyclerViewFragment.newInstance(url, RecyclerViewFragment.LIST_MOVIE);
+    }
+
+    private Fragment getWatchlistFragment() {
+        mLayoutSearch.setVisibility(View.GONE);
+        setTitle(getResources().getString(R.string.my_watchlist_tb_title));
+
+        String url = String.format(ApiConst.WATCHLIST_URL, AuthenticationInfo.getAccountId(this),
+                AuthenticationInfo.getSessionId(this));
+        return RecyclerViewFragment.newInstance(url, RecyclerViewFragment.LIST_MOVIE);
+    }
+
+    private void logout() {
+        AuthenticationInfo.removeAccountId(this);
+        AuthenticationInfo.removeSessionId(this);
+        setupNavView(checkLoggedIn(), null);
+        showHomeFragment();
+    }
 
     private void showHomeFragment() {
-        HomeFragment homeFragment = new HomeFragment();
-        FragmentManager manager = getSupportFragmentManager();
-        manager.beginTransaction().replace(R.id.activity_main_fl_holder, homeFragment).commit();
+        mLayoutSearch.setVisibility(View.VISIBLE);
+        setTitle("");
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.activity_main_fl_holder, new HomeFragment());
+        ft.addToBackStack(null);
+        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        ft.commit();
+        mDrawerLayout.closeDrawers();
     }
 
     private void setupNavView(boolean isLoggedIn, Account account) {
@@ -144,20 +217,19 @@ public class MainActivity extends AppCompatActivity implements AuthenticationTas
                 mImvProfilePic.setImageUrl(imgUrl, imgLoader);
                 mBtnAccount.setText(account.getUsername());
             }
-            mBtnAccount.setOnClickListener(onClickProfile);
             myListItem.setVisible(true);
         } else {
-            mBtnAccount.setOnClickListener(onClickLogin);
-            mImvProfilePic.setDefaultImageResId(R.drawable.unknown_profile_picture);
+            Bitmap img = BitmapFactory.decodeResource(getResources(), R.drawable.unknown_profile_picture);
+            mImvProfilePic.setImageBitmap(img);
             mBtnAccount.setText(getResources().getText(R.string.nav_header_login));
             myListItem.setVisible(false);
         }
     }
 
     private boolean checkLoggedIn() {
-        String sessionId = AuthenticationTask.getSessionId(mActivity);
+        String sessionId = AuthenticationInfo.getSessionId(this);
         if (sessionId != null) {
-            new AuthenticationTask(mActivity, this).getAccountInfo(sessionId);
+            new AuthenticationTask(this).getAccountInfo(sessionId);
             return true;
         }
         return false;
@@ -174,8 +246,25 @@ public class MainActivity extends AppCompatActivity implements AuthenticationTas
                 });
     }
 
+    private void setupViews() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.activity_main_toolbar);
+        setSupportActionBar(toolbar);
+        mLayoutSearch = (LinearLayout) findViewById(R.id.activity_main_layout_search);
+        mEdtSearch = (EditText) findViewById(R.id.activity_main_edt_search);
+        mImbSearch = (ImageButton) findViewById(R.id.activity_main_imb_search);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.activity_main_drawer_layout);
+        mDrawerToggle = new ActionBarDrawerToggle(this,
+                mDrawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
+        mDrawerLayout.addDrawerListener(mDrawerToggle);
+        mNavView = (NavigationView) findViewById(R.id.activity_main_nav_view);
+        mNavHeader = mNavView.inflateHeaderView(R.layout.nav_header);
+        mImvProfilePic = (NetworkImageView) mNavHeader.findViewById(R.id.nav_header_imv_profile_pic);
+        mBtnAccount = (Button) mNavHeader.findViewById(R.id.nav_header_btn_account);
+        mBtnAccount.setOnClickListener(this);
+    }
+
     private void showProgressDialog() {
-        mProgressDialog = new ProgressDialog(mActivity,
+        mProgressDialog = new ProgressDialog(this,
                 R.style.AppTheme_Dark_Dialog);
         mProgressDialog.setIndeterminate(true);
         mProgressDialog.setMessage(getResources().getString(R.string.authenticating_message));

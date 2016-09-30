@@ -39,4 +39,6 @@
     <string name="login_successfully">Login successfully</string>
     <string name="authenticating_message">Please wait</string>
     <string name="get_info_failed">Cannot get account\'s info.</string>
+    <string name="my_watchlist_tb_title">My watchlist</string>
+    <string name="my_favorite_tb_title">My favorite</string>
 </resources>
