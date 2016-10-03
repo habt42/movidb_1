@@ -16,13 +16,11 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.android.volley.toolbox.ImageLoader;
@@ -37,14 +35,15 @@ import com.framgia.habt.moviedb.util.ApiConst;
 import com.framgia.habt.moviedb.util.AuthenticationInfo;
 import com.framgia.habt.moviedb.util.AuthenticationTask;
 
-public class MainActivity extends AppCompatActivity
-        implements AuthenticationTask.GetSessionIdListener, View.OnClickListener {
-    private EditText mEdtSearch;
-    private ImageButton mImbSearch;
+public class MainActivity extends AppCompatActivity implements
+        AuthenticationTask.GetSessionIdListener,
+        View.OnClickListener,
+        SearchView.OnQueryTextListener,
+        SearchView.OnCloseListener {
+    private SearchView mSearchView;
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavView;
     private ActionBarDrawerToggle mDrawerToggle;
-    private LinearLayout mLayoutSearch;
 
     private View mNavHeader;
     private NetworkImageView mImvProfilePic;
@@ -52,6 +51,8 @@ public class MainActivity extends AppCompatActivity
 
     private ProgressDialog mProgressDialog;
     private AuthenticationTask mAuthenTask;
+
+    private RecyclerViewFragment mSearchFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +62,7 @@ public class MainActivity extends AppCompatActivity
         setupViews();
         setupNavView(checkLoggedIn(), null);
         setupDrawerContent(mNavView);
-        showHomeFragment();
+        showHomeFragment(false);
     }
 
     @Override
@@ -147,11 +148,53 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        if (mSearchFragment == null) {
+            showSearchFragment(query);
+        } else {
+            query = Uri.encode(query);
+            String url = String.format(ApiConst.SEARCH_URL, query);
+            mSearchFragment.reloadFromUrl(url);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        return false;
+    }
+
+    @Override
+    public boolean onClose() {
+        if (mSearchFragment != null) {
+            mSearchFragment.getUserVisibleHint();
+            getSupportFragmentManager().popBackStackImmediate();
+            mSearchFragment = null;
+        }
+        return false;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (!mSearchView.isIconified()) {
+            closeSearch();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    private void closeSearch() {
+        mSearchView.setQuery("", false);
+        mSearchView.setIconified(true);
+        onClose();
+    }
+
     private void selectDrawerItem(MenuItem item) {
         Fragment fragment;
         switch (item.getItemId()) {
             case R.id.nav_view_home_item:
-                showHomeFragment();
+                showHomeFragment(true);
                 return;
             case R.id.nav_view_discover_item:
                 fragment = getDiscoverFragment();
@@ -168,52 +211,59 @@ public class MainActivity extends AppCompatActivity
             default:
                 fragment = new HomeFragment();
         }
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.activity_main_fl_holder, fragment);
-        ft.addToBackStack(null);
-        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        ft.commit();
+        replaceFragment(fragment, true);
         item.setChecked(true);
         mDrawerLayout.closeDrawers();
     }
 
+    private void replaceFragment(Fragment fragment, boolean addToBackstack) {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.activity_main_fl_holder, fragment);
+        if (addToBackstack) {
+            ft.addToBackStack(null);
+        }
+        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        ft.commit();
+    }
+
+    private void showSearchFragment(String query) {
+        query = Uri.encode(query);
+        String url = String.format(ApiConst.SEARCH_URL, query);
+        mSearchFragment = RecyclerViewFragment.newInstance(url, RecyclerViewFragment.LIST_MOVIE);
+        replaceFragment(mSearchFragment, true);
+    }
+
     private Fragment getDiscoverFragment() {
-        mLayoutSearch.setVisibility(View.GONE);
-        setTitle(getResources().getString(R.string.discover_fragment_tb_title));
+        closeSearch();
         return DiscoverFragment.newInstance();
     }
 
     private Fragment getFavoriteFragment() {
-        mLayoutSearch.setVisibility(View.GONE);
-        setTitle(getResources().getString(R.string.my_favorite_tb_title));
+        closeSearch();
+        String title = getResources().getString(R.string.my_favorite_tb_title);
         String url = String.format(ApiConst.FAVORITE_LIST_URL, AuthenticationInfo.getAccountId(this),
                 AuthenticationInfo.getSessionId(this));
-        return RecyclerViewFragment.newInstance(url, RecyclerViewFragment.LIST_MOVIE);
+        return RecyclerViewFragment.newInstance(url, RecyclerViewFragment.LIST_MOVIE).setTitle(title);
     }
 
     private Fragment getWatchlistFragment() {
-        mLayoutSearch.setVisibility(View.GONE);
-        setTitle(getResources().getString(R.string.my_watchlist_tb_title));
+        closeSearch();
+        String title = getResources().getString(R.string.my_watchlist_tb_title);
         String url = String.format(ApiConst.WATCHLIST_URL, AuthenticationInfo.getAccountId(this),
                 AuthenticationInfo.getSessionId(this));
-        return RecyclerViewFragment.newInstance(url, RecyclerViewFragment.LIST_MOVIE);
+        return RecyclerViewFragment.newInstance(url, RecyclerViewFragment.LIST_MOVIE).setTitle(title);
     }
 
     private void logout() {
         AuthenticationInfo.removeAccountId(this);
         AuthenticationInfo.removeSessionId(this);
         setupNavView(checkLoggedIn(), null);
-        showHomeFragment();
+        showHomeFragment(false);
     }
 
-    private void showHomeFragment() {
-        mLayoutSearch.setVisibility(View.VISIBLE);
-        setTitle("");
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.activity_main_fl_holder, new HomeFragment());
-        ft.addToBackStack(null);
-        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        ft.commit();
+    private void showHomeFragment(boolean addToBackstack) {
+        closeSearch();
+        replaceFragment(new HomeFragment(), addToBackstack);
         mDrawerLayout.closeDrawers();
     }
 
@@ -258,9 +308,9 @@ public class MainActivity extends AppCompatActivity
     private void setupViews() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.activity_main_toolbar);
         setSupportActionBar(toolbar);
-        mLayoutSearch = (LinearLayout) findViewById(R.id.activity_main_layout_search);
-        mEdtSearch = (EditText) findViewById(R.id.activity_main_edt_search);
-        mImbSearch = (ImageButton) findViewById(R.id.activity_main_imb_search);
+        mSearchView = (SearchView) findViewById(R.id.activity_main_search_view);
+        mSearchView.setOnQueryTextListener(this);
+        mSearchView.setOnCloseListener(this);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.activity_main_drawer_layout);
         mDrawerToggle = new ActionBarDrawerToggle(this,
                 mDrawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);

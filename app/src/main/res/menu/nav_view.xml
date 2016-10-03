@@ -8,9 +8,6 @@
             android:id="@+id/nav_view_discover_item"
             android:title="@string/nav_view_discover_title"/>
         <item
-            android:id="@+id/nav_view_companies_item"
-            android:title="@string/nav_view_companies_title"/>
-        <item
             android:id="@+id/nav_view_my_list_item"
             android:title="@string/nav_view_my_list_title">
             <menu>

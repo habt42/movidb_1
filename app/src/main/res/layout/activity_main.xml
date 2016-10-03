@@ -19,31 +19,11 @@
             android:minHeight="?attr/actionBarSize"
             app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-            <LinearLayout
-                android:id="@+id/activity_main_layout_search"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
-
-                <EditText
-                    android:id="@+id/activity_main_edt_search"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@android:color/white"
-                    android:hint="@string/search_hint"
-                    android:textColor="@android:color/black"
-                    android:textColorHint="@android:color/darker_gray"/>
-
-                <ImageButton
-                    android:id="@+id/activity_main_imb_search"
-                    android:layout_width="@dimen/toolbar_icon_width"
-                    android:layout_height="@dimen/toolbar_icon_height"
-                    android:adjustViewBounds="true"
-                    android:background="@android:color/transparent"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/ic_search"/>
-            </LinearLayout>
+            <android.support.v7.widget.SearchView
+                android:id="@+id/activity_main_search_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"/>
         </android.support.v7.widget.Toolbar>
 
         <FrameLayout

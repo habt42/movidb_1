@@ -42,4 +42,5 @@ public class ApiConst {
     public static final String SORT_RATING_ASC = "vote_average.desc";
     public static final String SORT_TITLE_DESC = "original_title.desc";
     public static final String SORT_TITLE_ASC = "original_title.asc";
+    public static final String SEARCH_URL = BASE_URL + "search/movie" + API_KEY_PARAMS + "&query=" + "%s";
 }
