@@ -29,7 +29,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
-import java.util.Locale;
 
 public class RecyclerViewFragment<T> extends Fragment implements RecyclerViewAdapter.ClickListener {
     public static final int LIST_MOVIE = 100;
@@ -38,9 +37,7 @@ public class RecyclerViewFragment<T> extends Fragment implements RecyclerViewAda
 
     private static final String ARG_SOURCE_LOAD = "ARG_SOURCE_LOAD";
     private static final String ARG_LIST_TYPE = "ARG_LIST_TYPE";
-    private static final int JSON_FIRST_PAGE = 1;
     private static final int LIST_MOVIE_VISIBLE_THRESHOLD = 3;
-    private static final String URL_FORMAT_WITH_PAGE_PARAMS = "%s%s%d";
 
     private SwipeRefreshLayout mSrl;
     private RecyclerView mRecyclerView;
@@ -62,7 +59,6 @@ public class RecyclerViewFragment<T> extends Fragment implements RecyclerViewAda
         mSourceLoad = getArguments().getString(ARG_SOURCE_LOAD);
         mListType = getArguments().getInt(ARG_LIST_TYPE);
         mList = new ArrayList<>();
-        mCurrentPage = JSON_FIRST_PAGE;
         mActivity = getActivity();
     }
 
@@ -113,7 +109,13 @@ public class RecyclerViewFragment<T> extends Fragment implements RecyclerViewAda
         return fragment;
     }
 
+    public void reloadFromUrl(String url) {
+        mSourceLoad = url;
+        refreshList();
+    }
+
     private void loadData(int fromPage) {
+        if (mSourceLoad == null) return;
         String url = "";
         switch (mListType) {
             case LIST_MOVIE:
@@ -165,7 +167,8 @@ public class RecyclerViewFragment<T> extends Fragment implements RecyclerViewAda
         int itemCount = mList.size();
         mList.clear();
         mAdapter.notifyItemRangeRemoved(0, itemCount);
-        loadData(JSON_FIRST_PAGE);
+        mCurrentPage = 1;
+        loadData(mCurrentPage);
     }
 
     private static class GsonParse {
