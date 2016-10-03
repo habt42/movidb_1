@@ -6,13 +6,13 @@
     android:background="?attr/colorPrimaryDark"
     android:gravity="bottom"
     android:orientation="vertical"
-    android:padding="5dp"
-    android:theme="@style/ThemeOverlay.AppCompat.Dark">
+    android:padding="5dp">
 
-    <com.android.volley.toolbox.NetworkImageView
+    <com.framgia.habt.moviedb.ui.widget.FixNetworkImageView
         android:id="@+id/nav_header_imv_profile_pic"
         android:layout_width="@dimen/nav_header_profile_pic_width"
         android:layout_height="@dimen/nav_header_profile_pic_height"
+        android:layout_gravity="center_horizontal"
         android:scaleType="fitXY"/>
 
     <Button
@@ -20,5 +20,5 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
-        android:gravity="left|center_vertical"/>
+        android:gravity="center"/>
 </LinearLayout>

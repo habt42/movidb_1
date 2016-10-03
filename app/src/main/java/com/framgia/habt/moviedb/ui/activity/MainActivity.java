@@ -24,13 +24,13 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.NetworkImageView;
 import com.framgia.habt.moviedb.AppController;
 import com.framgia.habt.moviedb.R;
 import com.framgia.habt.moviedb.data.model.Account;
 import com.framgia.habt.moviedb.ui.fragment.DiscoverFragment;
 import com.framgia.habt.moviedb.ui.fragment.HomeFragment;
 import com.framgia.habt.moviedb.ui.fragment.RecyclerViewFragment;
+import com.framgia.habt.moviedb.ui.widget.FixNetworkImageView;
 import com.framgia.habt.moviedb.util.ApiConst;
 import com.framgia.habt.moviedb.util.AuthenticationInfo;
 import com.framgia.habt.moviedb.util.AuthenticationTask;
@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements
     private ActionBarDrawerToggle mDrawerToggle;
 
     private View mNavHeader;
-    private NetworkImageView mImvProfilePic;
+    private FixNetworkImageView mImvProfilePic;
     private Button mBtnAccount;
 
     private ProgressDialog mProgressDialog;
@@ -279,7 +279,7 @@ public class MainActivity extends AppCompatActivity implements
             myListItem.setVisible(true);
         } else {
             Bitmap img = BitmapFactory.decodeResource(getResources(), R.drawable.unknown_profile_picture);
-            mImvProfilePic.setImageBitmap(img);
+            mImvProfilePic.setLocalImageBitmap(img);
             mBtnAccount.setText(getResources().getText(R.string.nav_header_login));
             myListItem.setVisible(false);
         }
@@ -317,7 +317,7 @@ public class MainActivity extends AppCompatActivity implements
         mDrawerLayout.addDrawerListener(mDrawerToggle);
         mNavView = (NavigationView) findViewById(R.id.activity_main_nav_view);
         mNavHeader = mNavView.inflateHeaderView(R.layout.nav_header);
-        mImvProfilePic = (NetworkImageView) mNavHeader.findViewById(R.id.nav_header_imv_profile_pic);
+        mImvProfilePic = (FixNetworkImageView) mNavHeader.findViewById(R.id.nav_header_imv_profile_pic);
         mBtnAccount = (Button) mNavHeader.findViewById(R.id.nav_header_btn_account);
         mBtnAccount.setOnClickListener(this);
     }

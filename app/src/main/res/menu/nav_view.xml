@@ -3,9 +3,11 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_view_home_item"
+            android:icon="@drawable/ic_home"
             android:title="@string/nav_view_home_title"/>
         <item
             android:id="@+id/nav_view_discover_item"
+            android:icon="@drawable/ic_discover"
             android:title="@string/nav_view_discover_title"/>
         <item
             android:id="@+id/nav_view_my_list_item"
@@ -14,9 +16,11 @@
                 <group android:checkableBehavior="single">
                     <item
                         android:id="@+id/nav_view_my_favorite_item"
+                        android:icon="@drawable/ic_favorite"
                         android:title="@string/nav_view_my_favorite_title"/>
                     <item
                         android:id="@+id/nav_view_my_watchlist_item"
+                        android:icon="@drawable/ic_watchlist"
                         android:title="@string/nav_view_my_watchlist_title"/>
                     <item
                         android:id="@+id/nav_view_logout_item"
