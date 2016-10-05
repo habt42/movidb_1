@@ -29,4 +29,17 @@ public class ApiConst {
     public static final String GRAVATAR_URL = "https://www.gravatar.com/avatar/" + "%s";
     public static final String FAVORITE_LIST_URL = BASE_URL + "account/" + "%s" + "/favorite/movies" + API_KEY_PARAMS + "&session_id=" + "%s";
     public static final String WATCHLIST_URL = BASE_URL + "account/" + "%s" + "/watchlist/movies" + API_KEY_PARAMS + "&session_id=" + "%s";
+    public static final String LIST_GENRE_URL = BASE_URL + "genre/movie/list" + API_KEY_PARAMS;
+    public static final String DISCOVER_URL = BASE_URL + "discover/movie" + API_KEY_PARAMS;
+    public static final String SORT_BY_PARAM = "&sort_by=" + "%s";
+    public static final String YEAR_PARAM = "&year=" + "%s";
+    public static final String GENRE_PARAM = "&with_genres=" + "%s";
+    public static final String SORT_POPULARITY_DESC = "popularity.desc";
+    public static final String SORT_POPULARITY_ASC = "popularity.asc";
+    public static final String SORT_RELEASE_DATE_DESC = "release_date.desc";
+    public static final String SORT_RELEASE_DATE_ASC = "release_date.asc";
+    public static final String SORT_RATING_DESC = "vote_average.desc";
+    public static final String SORT_RATING_ASC = "vote_average.desc";
+    public static final String SORT_TITLE_DESC = "original_title.desc";
+    public static final String SORT_TITLE_ASC = "original_title.asc";
 }

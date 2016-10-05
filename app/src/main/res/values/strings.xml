@@ -41,4 +41,27 @@
     <string name="get_info_failed">Cannot get account\'s info.</string>
     <string name="my_watchlist_tb_title">My watchlist</string>
     <string name="my_favorite_tb_title">My favorite</string>
+    <string name="discover_fragment_tb_title">Discover</string>
+    <string name="popularity_desc">Popularity Descending</string>
+    <string name="popularity_asc">Popularity Ascending</string>
+    <string name="release_date_desc">Release Date Descending</string>
+    <string name="release_date_asc">Release Date Ascending</string>
+    <string name="vote_average_desc">Rating Descending</string>
+    <string name="vote_average_asc">Rating Ascending</string>
+    <string name="original_title_desc">Original Title (A-Z)</string>
+    <string name="original_title_asc">Original Title (Z-A)</string>
+    <string-array name="sort_by_array">
+        <item>@string/popularity_desc</item>
+        <item>@string/popularity_asc</item>
+        <item>@string/release_date_desc</item>
+        <item>@string/release_date_asc</item>
+        <item>@string/vote_average_desc</item>
+        <item>@string/vote_average_asc</item>
+        <item>@string/original_title_desc</item>
+        <item>@string/original_title_asc</item>
+    </string-array>
+    <string name="spinner_select_none">None</string>
+    <string name="fragment_discover_sort_label">Sort by:</string>
+    <string name="fragment_discover_year_label">Year: </string>
+    <string name="fragment_discover_genre_label">Genre: </string>
 </resources>

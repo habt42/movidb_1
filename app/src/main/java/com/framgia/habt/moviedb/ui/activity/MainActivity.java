@@ -30,6 +30,7 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.framgia.habt.moviedb.AppController;
 import com.framgia.habt.moviedb.R;
 import com.framgia.habt.moviedb.data.model.Account;
+import com.framgia.habt.moviedb.ui.fragment.DiscoverFragment;
 import com.framgia.habt.moviedb.ui.fragment.HomeFragment;
 import com.framgia.habt.moviedb.ui.fragment.RecyclerViewFragment;
 import com.framgia.habt.moviedb.util.ApiConst;
@@ -152,6 +153,9 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_view_home_item:
                 showHomeFragment();
                 return;
+            case R.id.nav_view_discover_item:
+                fragment = getDiscoverFragment();
+                break;
             case R.id.nav_view_my_watchlist_item:
                 fragment = getWatchlistFragment();
                 break;
@@ -173,6 +177,12 @@ public class MainActivity extends AppCompatActivity
         mDrawerLayout.closeDrawers();
     }
 
+    private Fragment getDiscoverFragment() {
+        mLayoutSearch.setVisibility(View.GONE);
+        setTitle(getResources().getString(R.string.discover_fragment_tb_title));
+        return DiscoverFragment.newInstance();
+    }
+
     private Fragment getFavoriteFragment() {
         mLayoutSearch.setVisibility(View.GONE);
         setTitle(getResources().getString(R.string.my_favorite_tb_title));
@@ -184,7 +194,6 @@ public class MainActivity extends AppCompatActivity
     private Fragment getWatchlistFragment() {
         mLayoutSearch.setVisibility(View.GONE);
         setTitle(getResources().getString(R.string.my_watchlist_tb_title));
-
         String url = String.format(ApiConst.WATCHLIST_URL, AuthenticationInfo.getAccountId(this),
                 AuthenticationInfo.getSessionId(this));
         return RecyclerViewFragment.newInstance(url, RecyclerViewFragment.LIST_MOVIE);
