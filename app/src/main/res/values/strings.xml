@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MovieDB</string>
+    <string name="app_name">The Movie DB</string>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
     <string name="home_fragment_title">Home</string>
@@ -64,4 +64,5 @@
     <string name="fragment_discover_sort_label">Sort by:</string>
     <string name="fragment_discover_year_label">Year: </string>
     <string name="fragment_discover_genre_label">Genre: </string>
+    <string name="empty_list_message">Nothing to show</string>
 </resources>

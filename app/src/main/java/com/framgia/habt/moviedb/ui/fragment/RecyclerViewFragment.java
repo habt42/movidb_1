@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Response;
@@ -41,8 +42,10 @@ public class RecyclerViewFragment<T> extends Fragment implements RecyclerViewAda
 
     private SwipeRefreshLayout mSrl;
     private RecyclerView mRecyclerView;
-    private RecyclerViewAdapter mAdapter;
+    private TextView mTvEmptyMessage;
 
+    private String mTitle;
+    private RecyclerViewAdapter mAdapter;
     private ArrayList<T> mList;
     private Activity mActivity;
     private String mSourceLoad;
@@ -66,6 +69,7 @@ public class RecyclerViewFragment<T> extends Fragment implements RecyclerViewAda
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_recycler_view, container, false);
+        mTvEmptyMessage = (TextView) view.findViewById(R.id.fragment_recycler_view_tv_empty);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.fragment_recycler_view_rv);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
         mAdapter = new RecyclerViewAdapter(mList);
@@ -92,6 +96,14 @@ public class RecyclerViewFragment<T> extends Fragment implements RecyclerViewAda
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if (mTitle != null) {
+            getActivity().setTitle(mTitle);
+        }
+    }
+
+    @Override
     public void onItemClick(int position) {
         if (mListType == LIST_MOVIE) {
             Intent intent = new Intent(mActivity, MovieDetailActivity.class);
@@ -107,6 +119,11 @@ public class RecyclerViewFragment<T> extends Fragment implements RecyclerViewAda
         RecyclerViewFragment fragment = new RecyclerViewFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    public RecyclerViewFragment setTitle(String title) {
+        mTitle = title;
+        return this;
     }
 
     public void reloadFromUrl(String url) {
@@ -147,11 +164,18 @@ public class RecyclerViewFragment<T> extends Fragment implements RecyclerViewAda
                 } else if (mListType == LIST_CAST) {
                     tmp = parse.getListCast();
                 }
-                int positionStart = mList.size() - 1;
+                int positionStart = mList.size() == 0 ? 0 : mList.size() - 1;
                 int itemCount = tmp.size();
                 mList.addAll(tmp);
-                mAdapter.notifyItemRangeInserted(positionStart, itemCount);
-                mAdapter.newDataLoaded();
+                if (mList.isEmpty()) {
+                    mTvEmptyMessage.setVisibility(View.VISIBLE);
+                    mRecyclerView.setVisibility(View.GONE);
+                } else {
+                    mTvEmptyMessage.setVisibility(View.GONE);
+                    mRecyclerView.setVisibility(View.VISIBLE);
+                    mAdapter.notifyItemRangeInserted(positionStart, itemCount);
+                    mAdapter.newDataLoaded();
+                }
                 mSrl.setRefreshing(false);
             }
         }, new Response.ErrorListener() {

@@ -52,6 +52,12 @@ public class DiscoverFragment extends Fragment implements AdapterView.OnItemSele
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        getActivity().setTitle(R.string.discover_fragment_tb_title);
+    }
+
     public static DiscoverFragment newInstance() {
         return new DiscoverFragment();
     }
@@ -60,7 +66,6 @@ public class DiscoverFragment extends Fragment implements AdapterView.OnItemSele
         mListMovieFragment = RecyclerViewFragment.newInstance(null, RecyclerViewFragment.LIST_MOVIE);
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.add(R.id.fragment_discover_fl_holder, mListMovieFragment);
-        ft.addToBackStack(null);
         ft.commit();
     }
 
